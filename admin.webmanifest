@@ -1,0 +1,15 @@
+{
+  "name": "Sir'Earth Class · ครู",
+  "short_name": "Sir'Earth ครู",
+  "description": "ห้องเรียนออนไลน์ — คะแนน ส่งงาน ข้อสอบ · โรงเรียนโซ่พิสัยพิทยาคม",
+  "lang": "th",
+  "start_url": "https://spk1234-aff.github.io/spk-gradebook/admin.html",
+  "scope": "https://spk1234-aff.github.io/spk-gradebook/",
+  "display": "standalone",
+  "background_color": "#f4f6fb",
+  "theme_color": "#1d4ed8",
+  "icons": [
+    { "src": "https://spk1234-aff.github.io/spk-gradebook/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "https://spk1234-aff.github.io/spk-gradebook/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
