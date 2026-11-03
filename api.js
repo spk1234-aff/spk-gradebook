@@ -111,12 +111,28 @@
   FB.whenTeacher = function (cb) { fb().then(function () { if (isTeacher(auth.currentUser)) cb(); }); };
   FB.signOut = function () { if (window.SE_CORE) window.SE_CORE.stop(); coreP = null; return fb().then(function () { return auth.signOut(); }); };
   FB.user = function () { return auth && auth.currentUser; };
+  /** ปุ่มรีเฟรช: มีหน้าเว็บ/โค้ดระบบเวอร์ชันใหม่ไหม (ถ้ามี เก็บไว้แล้วให้หน้าเว็บโหลดใหม่) */
+  FB.checkUpdate = function (page) {
+    var get = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, put = function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} };
+    var a = remote('getPage', [page], null).then(function (h) { var o = get('gb_page_' + page); if (!h || h === o) return false; put('gb_page_' + page, h); return !!o; });
+    var b = !isAdmin ? false : remote('getCore', [], null).then(function (t) { var o = get('se_core'); if (!t || t === o) return false; put('se_core', t); return !!o; });
+    return Promise.all([a, b]).then(function (r) { return r[0] || r[1]; }, function () { return false; });
+  };
+  /** นักเรียน: อ่านหน้าของตัวเองใหม่ (ยังเข้าสู่ระบบอยู่ในแท็บนี้) */
+  function studentResume() {
+    return fb().then(function () {
+      var u = auth.currentUser, m = u && String(u.email).match(/^(\d{4,6})@stu[.]sirearth[.]app$/i);
+      if (!m) return { ok: false };
+      return db.collection('v').doc(m[1]).get().then(function (v) { return v.exists ? { ok: true, tok: 'fb', data: JSON.parse(v.data().j) } : { ok: false }; });
+    });
+  }
 
   /** จัดเส้นทางคำสั่ง: ในเครื่อง (Firestore) หรือ Apps Script */
   function dispatch(fn, args) {
     if (fn === 'getPage') return remote(fn, args, null);
     if (fn === 'getInfo') return fb().then(function () { return db.collection('pub').doc('main').get(); }).then(function (d) { return d.exists ? d.data() : null; });
     if (fn === 'login') return studentLogin(args[0], args[1]);
+    if (fn === 'stuResume') return studentResume();
     if (fn === 'submitWork') return fb().then(function () { return remote(fn, args, 0); });
     if (fn === 'adminLogin') return teacherLogin();
     if (fn === 'adminResume') return fb().then(function () { if (!isTeacher(auth.currentUser)) throw sess(); return teacherData(); });
