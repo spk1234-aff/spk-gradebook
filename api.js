@@ -133,7 +133,7 @@
     if (fn === 'getInfo') return fb().then(function () { return db.collection('pub').doc('main').get(); }).then(function (d) { return d.exists ? d.data() : null; });
     if (fn === 'login') return studentLogin(args[0], args[1]);
     if (fn === 'stuResume') return studentResume();
-    if (fn === 'submitWork' || fn === 'stuWorkFile') return fb().then(function () { return remote(fn, args, 0); });
+    if (fn === 'submitWork' || fn === 'stuWorkFile' || fn === 'submitUpStart' || fn === 'submitUpChunk') return fb().then(function () { return remote(fn, args, 0); });
     if (fn === 'adminLogin') return teacherLogin();
     if (fn === 'adminResume') return fb().then(function () { if (!isTeacher(auth.currentUser)) throw sess(); return teacherData(); });
     if (fn === 'adminChangePassword') return Promise.reject(new Error('ตอนนี้เข้าสู่ระบบด้วยบัญชี Google แล้ว ไม่ต้องใช้รหัสผ่าน'));
